@@ -1,21 +1,32 @@
-﻿# Product Service Dockerfile
-FROM golang:1.20 AS builder
+﻿# Используем официальный образ Golang в качестве базового
+FROM golang:1.23 AS builder
+
+# Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Копируем go.mod и go.sum (если есть)
-COPY go.mod .
-COPY go.sum .
+# Копируем файлы go.mod и go.sum для кэширования зависимостей
+COPY go.mod go.sum ./
 
-# Устанавливаем зависимости
+# Загружаем все зависимости
 RUN go mod download
 
-# Копируем исходный код
-COPY product_service.go .
+# Копируем исходный код в контейнер
+COPY . .
 
-# Собираем исполняемый файл
-RUN go build -o product_service .
+# Собираем Go приложение
+RUN go build -o product-service .
 
-FROM alpine:latest
+# Начинаем новый этап с пустого образа
+FROM alpine:latest  
+
+# Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /root/
-COPY --from=builder /app/product_service .
-CMD ["./product_service"]
+
+# Копируем собранный бинарный файл из предыдущего этапа
+COPY --from=builder /app/product-service .
+
+# Открываем порт 8082 для внешнего мира
+EXPOSE 8082
+
+# Команда для запуска исполняемого файла
+CMD ["./product-service"]
