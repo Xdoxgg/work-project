@@ -1,4 +1,5 @@
 version: '3.3'
+
 services:
   postgres:
     image: postgres:latest
@@ -21,21 +22,31 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "8081:80"
+      - "8080:80"
     depends_on:
       - postgres
     networks:
       - db-net
 
   user-service:
-    image: user-service:local
     build:
       context: ./app/user_service
       dockerfile: Dockerfile
     ports:
-      - "8082:80" 
+      - "8081:8081"  # Теперь внутренний и внешний порты совпадают
     depends_on:
       - postgres
+    networks:
+      - db-net
+
+  product-service:
+    build:
+      context: ./app/product_service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - user-service
     networks:
       - db-net
 

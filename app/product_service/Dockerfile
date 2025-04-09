@@ -1,32 +1,19 @@
-﻿# Используем официальный образ Golang в качестве базового
-FROM golang:1.23 AS builder
+﻿FROM golang:1.21-alpine AS builder
 
-# Устанавливаем рабочую директорию внутри контейнера
+RUN apk --no-cache add
+
 WORKDIR /app
 
-# Копируем файлы go.mod и go.sum для кэширования зависимостей
 COPY go.mod go.sum ./
-
-# Загружаем все зависимости
 RUN go mod download
 
-# Копируем исходный код в контейнер
 COPY . .
 
-# Собираем Go приложение
-RUN go build -o product-service .
+RUN go build -o bin/app ./product_service.go
 
-# Начинаем новый этап с пустого образа
-FROM alpine:latest  
 
-# Устанавливаем рабочую директорию внутри контейнера
-WORKDIR /root/
+FROM alpine AS runner
 
-# Копируем собранный бинарный файл из предыдущего этапа
-COPY --from=builder /app/product-service .
-
-# Открываем порт 8082 для внешнего мира
+COPY --from=builder /app/bin/app /
 EXPOSE 8082
-
-# Команда для запуска исполняемого файла
-CMD ["./product-service"]
+CMD ["/.product_service"]

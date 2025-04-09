@@ -14,7 +14,7 @@ type User struct {
 }
 
 func connectDB() (*sql.DB, error) {
-	connStr := "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
+	connStr := "host=postgres port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		fmt.Println("Ошибка подключения к базе данных:", err)

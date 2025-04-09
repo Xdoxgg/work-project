@@ -15,5 +15,5 @@ RUN go build -o bin/app ./user_service.go
 FROM alpine AS runner
 
 COPY --from=builder /app/bin/app /
-EXPOSE 8082
-CMD ["/app"]
+EXPOSE 8081
+CMD ["./user_service"]
