@@ -8,8 +8,8 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - ./app/data:/var/lib/postgresql/data
-      - ./app/schema.sql:/schema.sql
-      - ./app/seeds.sql:/seeds.sql
+      - ./app/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./app/seeds.sql:/docker-entrypoint-initdb.d/02-seeds.sql
     ports:
       - "5432:5432"
     networks:
