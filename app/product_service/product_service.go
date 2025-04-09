@@ -10,6 +10,11 @@ func productHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	fmt.Println("start")
+	
 	http.HandleFunc("/products", productHandler)
+	fmt.Println("m1")
 	http.ListenAndServe(":8082", nil)
+	fmt.Println("m2")
+	
 }
