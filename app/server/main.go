@@ -146,5 +146,5 @@ func main() {
 		return
 	}
 	http.HandleFunc("/api/user", userHandler)
-	http.ListenAndServe(":8082", nil)
+	http.ListenAndServe(":8080", nil)
 }

@@ -16,37 +16,26 @@ services:
     networks:
       - db-net
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "8080:80"
-    depends_on:
-      - postgres
-    networks:
-      - db-net
+#  pgadmin:
+#    image: dpage/pgadmin4:latest
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+#      PGADMIN_DEFAULT_PASSWORD: admin
+#    ports:
+#      - "8080:80"
+#    depends_on:
+#      - postgres
+#    networks:
+#      - db-net
 
-  user-service:
+  server:
     build:
-      context: ./app/user_service
+      context: ./app/server
       dockerfile: Dockerfile
     ports:
-      - "8081:8081"  # Теперь внутренний и внешний порты совпадают
+      - "8080:8080"  # Теперь внутренний и внешний порты совпадают
     depends_on:
       - postgres
-    networks:
-      - db-net
-
-  product-service:
-    build:
-      context: ./app/product_service
-      dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
-    depends_on:
-      - user-service
     networks:
       - db-net
 
