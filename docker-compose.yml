@@ -22,18 +22,29 @@ services:
 #      PGADMIN_DEFAULT_EMAIL: admin@admin.com
 #      PGADMIN_DEFAULT_PASSWORD: admin
 #    ports:
-#      - "8080:80"
+#      - "8081:80"
 #    depends_on:
 #      - postgres
 #    networks:
 #      - db-net
 
-  server:
+  user-service:
     build:
-      context: ./app/server
+      context: ./app/user_service
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"  # Теперь внутренний и внешний порты совпадают
+      - "8081:8080"
+    depends_on:
+      - postgres
+    networks:
+      - db-net
+
+  test-service:
+    build:
+      context: app/test_service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
     depends_on:
       - postgres
     networks:

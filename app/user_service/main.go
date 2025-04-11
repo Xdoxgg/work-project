@@ -28,7 +28,7 @@ func hashPassword(password string) (string, error) {
 }
 
 func connectDB() (*sql.DB, error) {
-	connStr := "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
+	connStr := "host=postgres port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		fmt.Println("Ошибка подключения к базе данных:", err)
@@ -61,8 +61,8 @@ func getUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	email := r.FormValue("email")       //r.URL.Query().Get("email")
-	password := r.FormValue("password") //r.URL.Query().Get("password")
+	email := r.URL.Query().Get("email")
+	password := r.URL.Query().Get("password")
 
 	if email == "" || password == "" {
 		http.Error(w, "Email и пароль обязательны", http.StatusBadRequest)
@@ -102,8 +102,8 @@ func postUsersHandler(w http.ResponseWriter, r *http.Request) {
 
 	user := User{
 		ID:       -1,
-		Email:    r.FormValue("email"),    //r.URL.Query().Get("email"),
-		Password: r.FormValue("password"), //r.URL.Query().Get("password"),
+		Email:    r.URL.Query().Get("email"),
+		Password: r.URL.Query().Get("password"),
 	}
 	result, err := addUser(db, user)
 	if err != nil {
@@ -145,6 +145,7 @@ func main() {
 		fmt.Println("conneting to db faled")
 		return
 	}
+	fmt.Println("user-test_service started")
 	http.HandleFunc("/api/user", userHandler)
 	http.ListenAndServe(":8080", nil)
 }

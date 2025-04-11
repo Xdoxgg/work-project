@@ -1,4 +1,4 @@
-﻿FROM golang:1.21-alpine AS builder
+﻿FROM golang:1.23-alpine AS builder
 
 RUN apk --no-cache add
 
@@ -9,11 +9,10 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o bin/app ./user_service.go
-
+RUN go build -o bin/app ./main.go
 
 FROM alpine AS runner
 
 COPY --from=builder /app/bin/app /
-EXPOSE 8081
-CMD ["./user_service"]
+EXPOSE 8080
+CMD ["./app"]
