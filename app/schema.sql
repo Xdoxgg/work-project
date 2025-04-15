@@ -27,8 +27,18 @@ CREATE TABLE IF NOT EXISTS tags(
 );
 
 
-Table movies_to_tags{
-  id serial [primary key]
-  tag_id INTEGER 
-  movie_id INTEGER
-}
+
+
+CREATE TABLE IF NOT EXISTS movies_to_tags(
+  id SERIAL PRIMARY KEY,
+  tag_id INTEGER,
+  movie_id INTEGER,
+  FOREIGN KEY tag_id REFERENCESE tags.id,
+  FOREIGN KEY movie_id REFERENCESE movies.id
+);
+
+CREATE TABLE IF NOT EXISTS movies_to_genres(
+  id SERIAL PRIMARY KEY,
+  movie_id INTEGER,
+  genre_id INTEGER,
+);
