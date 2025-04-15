@@ -7,6 +7,7 @@ import (
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"os"
 )
 
 type User struct {
@@ -28,8 +29,9 @@ func hashPassword(password string) (string, error) {
 }
 
 func connectDB() (*sql.DB, error) {
-	connStr := "host=postgres port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	dbURL := os.Getenv("DATABASE_URL")
+
+	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		fmt.Println("Ошибка подключения к базе данных:", err)
 		return nil, err
@@ -140,12 +142,12 @@ func addUser(db *sql.DB, user User) (bool, error) {
 }
 
 func main() {
-	_, err := connectDB()
-	if err != nil {
-		fmt.Println("conneting to db faled")
-		return
+	port := os.Getenv("USER_SERVICE_PORT")
+	if port == "" {
+		port = "8080"
 	}
-	fmt.Println("user-test_service started")
+
+	fmt.Println("user-test_service started on port", port)
 	http.HandleFunc("/api/user", userHandler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+port, nil)
 }

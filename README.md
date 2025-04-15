@@ -1,47 +1,18 @@
 
+# CHECK API'S
 
-Table users {
-  id serial [primary key]
-  email varchar(255)
-  password VARCHAR(60)
-}
+---
+### USER-SERVICE
+curl "http://localhost:8081/api/user?email=&password="
 
-Table movies{
-  id serial [primary key]
-  title varchar(255)
-  description varchar(255)
-  year date
-}
+curl -X POST "http://localhost:8081/api/user?email=newuser@example.com&password=newpassword"
 
-Table genres{
-  id serial [primary key]
-  title varchar(255)
-}
+---
 
-Table tags{
-  id serial [primary key]
-  title varchar(255)
-}
+### MOVIE-SERVICE
 
-Table movies_to_tags{
-  id serial [primary key]
-  tag_id integer 
-  movie_id integer
-}
+curl "http://localhost:8082/api/movies"
 
-Table movies_to_genres{
-  id serial [primary key]
-  movie_id integer
-  genre_id integer
-}
+curl -X POST "http://localhost:8082/api/movies?title=Inception&description=A%20thief%20who%20steals%20corporate%20secrets%20through%20the%20use%20of%20dream-sharing%20technology%20is%20given%20the%20inverse%20task%20of%20planting%20an%20idea%20into%20the%20mind%20of%20a%20CEO.&year=2010"
 
-
-
-
-
-ref: movies.id < movies_to_tags.movie_id
-ref: tags.id < movies_to_tags.tag_id
-
-ref: movies.id > movies_to_genres.movie_id
-ref: genres.id > movies_to_genres.genre_id
-
+---

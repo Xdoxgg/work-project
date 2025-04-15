@@ -6,6 +6,7 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"net/http"
+	"os"
 )
 
 type Movie struct {
@@ -16,8 +17,9 @@ type Movie struct {
 }
 
 func connectDB() (*sql.DB, error) {
-	connStr := "host=postgres port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	dbURL := os.Getenv("DATABASE_URL") // Используем переменную окружения
+
+	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		fmt.Println("Ошибка подключения к базе данных:", err)
 		return nil, err
@@ -99,13 +101,12 @@ func postMovieHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	_, err := connectDB()
-	if err != nil {
-		fmt.Println("connecting to db failed")
-		return
+	port := os.Getenv("MOVIE_SERVICE_PORT") // Используем переменную окружения для порта
+	if port == "" {
+		port = "8080" // Значение по умолчанию
 	}
 
-	fmt.Println("movie-service started")
+	fmt.Println("movie-service started on port", port)
 	http.HandleFunc("/api/movies", movieHandler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+port, nil)
 }
