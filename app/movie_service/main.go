@@ -13,7 +13,7 @@ type Movie struct {
 	ID          int    `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Year        int    `json:"year"`
+	Year        string `json:"year"`
 }
 
 func connectDB() (*sql.DB, error) {
@@ -57,7 +57,6 @@ func getMoviesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer rows.Close()
-
 	var movies []Movie
 	for rows.Next() {
 		var movie Movie
