@@ -142,12 +142,8 @@ func addUser(db *sql.DB, user User) (bool, error) {
 }
 
 func main() {
-	port := os.Getenv("USER_SERVICE_PORT")
-	if port == "" {
-		port = "8080"
-	}
 
-	fmt.Println("user-test_service started on port", port)
+	fmt.Println("user-service started")
 	http.HandleFunc("/api/user", userHandler)
-	http.ListenAndServe(":"+port, nil)
+	http.ListenAndServe(":8080", nil)
 }

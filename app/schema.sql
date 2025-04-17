@@ -1,5 +1,9 @@
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS genres;
+DROP TABLE IF EXISTS tags;
+DROP TABLE IF EXISTS movies_to_tags;
+DROP TABLE IF EXISTS movies_to_genres;
 
 CREATE TABLE IF NOT EXISTS users(
     id SERIAL PRIMARY KEY,
@@ -33,12 +37,14 @@ CREATE TABLE IF NOT EXISTS movies_to_tags(
   id SERIAL PRIMARY KEY,
   tag_id INTEGER,
   movie_id INTEGER,
-  FOREIGN KEY tag_id REFERENCESE tags.id,
-  FOREIGN KEY movie_id REFERENCESE movies.id
+  FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE,
+  FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS movies_to_genres(
-  id SERIAL PRIMARY KEY,
-  movie_id INTEGER,
-  genre_id INTEGER,
+    id SERIAL PRIMARY KEY,
+    movie_id INTEGER,
+    genre_id INTEGER,
+    FOREIGN KEY (genre_id) REFERENCES genres (id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 );

@@ -16,17 +16,17 @@ services:
     networks:
       - db-net
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "8080:80"
-    depends_on:
-      - postgres
-    networks:
-      - db-net
+#  pgadmin:
+#    image: dpage/pgadmin4:latest
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+#      PGADMIN_DEFAULT_PASSWORD: admin
+#    ports:
+#      - "8080:80"
+#    depends_on:
+#      - postgres
+#    networks:
+#      - db-net
 
   user-service:
     build:
@@ -55,7 +55,20 @@ services:
       - postgres
     networks:
       - db-net
-
+        
+  recomendations-service:
+    build:
+      context: app/recomendations_service
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - PORT=${RECOMENDATIONS_SERVICE_INTERNAL_PORT}
+    ports:
+      - "${RECOMENDATIONS_SERVICE_PORT}:${RECOMENDATIONS_SERVICE_INTERNAL_PORT}"
+    depends_on:
+      - postgres
+    networks:
+      - db-net
 
 
 networks:
